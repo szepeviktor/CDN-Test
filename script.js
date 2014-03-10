@@ -14,23 +14,30 @@ button.addEventListener('click', function () {
 hosts = [
     {
         'name': 'Google CDN',
+        'cors': false,
         'file': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'
     },
     {
         'name': 'CDNJS',
+        'cors': false,
         'file': 'http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js'
     },
     {
         'name': 'Microsoft ASP.NET',
+        'cors': true,
         'file': 'http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.0.min.js'
     }
 ];
 
-grabfile = function (url, result, callback) {
+grabfile = function (item, result, callback) {
     'use strict';
     var request;
     request = new XMLHttpRequest();
-    request.open('GET', url, false);
+    request.open('GET', item.file, false);
+    if (item.cors) {
+        request.withCredentials = true;
+        request.setRequestHeader('Access-Control-Allow-Origin', '*');
+    }
     request.onerror = function () {
         return 'error';
     };
@@ -79,7 +86,7 @@ runTest = function (callback) {
     hosts.forEach(function (item) {
         result.name = item.name;
         result.startTime = new Date().getTime();
-        grabfile(item.file, result, callback);
+        grabfile(item, result, callback);
 
     });
 };
