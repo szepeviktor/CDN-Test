@@ -30,7 +30,7 @@ grabfile = function (url, result, callback) {
     'use strict';
     var request;
     request = new XMLHttpRequest();
-    request.open('GET', url, true);
+    request.open('GET', url, false);
     request.onerror = function () {
         return 'error';
     };
