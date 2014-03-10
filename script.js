@@ -8,7 +8,7 @@ var grabfile,
 button = document.getElementsByTagName('button')[0];
 button.addEventListener('click', function () {
     'use strict';
-    runTest();
+    runTest(displayResults);
 });
 
 hosts = [
@@ -19,10 +19,14 @@ hosts = [
     {
         'name': 'CDNJS',
         'file': 'http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js'
+    },
+    {
+        'name': 'Microsoft ASP.NET',
+        'file': 'http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.0.min.js'
     }
 ];
 
-grabfile = function (url) {
+grabfile = function (url, result, callback) {
     'use strict';
     var request;
     request = new XMLHttpRequest();
@@ -30,7 +34,15 @@ grabfile = function (url) {
     request.onerror = function () {
         return 'error';
     };
-    return request;
+    request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+            result.status = request.status;
+            result.endTime = new Date().getTime();
+            result.runTime = (result.endTime - result.startTime) / 1000;
+            callback(result);
+        }
+    };
+    request.send();
 };
 
 displayResults = function (result) {
@@ -41,7 +53,6 @@ displayResults = function (result) {
         startTime,
         endTime,
         runTime;
-    console.log(result);
     if (result) {
         row = document.createElement('tr');
         name = document.createElement('td');
@@ -60,7 +71,7 @@ displayResults = function (result) {
     }
 };
 
-runTest = function () {
+runTest = function (callback) {
     'use strict';
     var result = {},
         request,
@@ -68,15 +79,7 @@ runTest = function () {
     hosts.forEach(function (item) {
         result.name = item.name;
         result.startTime = new Date().getTime();
-        request = grabfile(item.file);
-        request.onreadystatechange = function () {
-            if (request.readyState === 4) {
-                result.status = request.status;
-                result.endTime = new Date().getTime();
-                result.runTime = (result.endTime - result.startTime) / 1000;
-                displayResults(result);
-            }
-        };
-        request.send();
+        grabfile(item.file, result, callback);
+
     });
 };
