@@ -35,7 +35,6 @@ grabfile = function (item, result, callback) {
     request = new XMLHttpRequest();
     request.open('GET', item.file, false);
     if (item.cors) {
-        request.withCredentials = true;
         request.setRequestHeader('Access-Control-Allow-Origin', '*');
     }
     request.onerror = function () {
