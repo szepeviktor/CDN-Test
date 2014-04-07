@@ -26,6 +26,11 @@ hosts = [
         'name': 'Microsoft ASP.NET',
         'cors': true,
         'file': 'http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.0.min.js'
+    },
+    {
+        'name': 'OSSCDN',
+        'cors': false,
+        'file': '//oss.maxcdn.com/jquery/2.1.0/jquery.js'
     }
 ];
 
